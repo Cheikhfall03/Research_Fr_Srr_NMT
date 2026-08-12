@@ -51,23 +51,30 @@ class Config:
 
     @property
     def CHECKPOINT_DIR(self) -> str:
-        return str(Path(self.CHECKPOINTS_DIR) / f"config_{self.EXPERIMENT_ID}")
+        return self._seeded_dir(f"config_{self.EXPERIMENT_ID}")
 
     @property
     def CHECKPOINTS_A(self) -> str:
-        return str(Path(self.CHECKPOINTS_DIR) / "config_A")
+        return self._seeded_dir("config_A")
 
     @property
     def CHECKPOINTS_B(self) -> str:
-        return str(Path(self.CHECKPOINTS_DIR) / "config_B")
+        return self._seeded_dir("config_B")
 
     @property
     def CHECKPOINTS_C(self) -> str:
-        return str(Path(self.CHECKPOINTS_DIR) / "config_C")
+        return self._seeded_dir("config_C")
 
     @property
     def CHECKPOINTS_D(self) -> str:
-        return str(Path(self.CHECKPOINTS_DIR) / "config_D")
+        return self._seeded_dir("config_D")
+
+    def _seeded_dir(self, name: str) -> str:
+        # Le seed 42 est le seed par défaut du papier: on garde le nom de dossier
+        # historique pour ne pas invalider les checkpoints déjà produits. Les
+        # autres seeds (étude multi-seed) vont dans un sous-dossier dédié.
+        base = Path(self.CHECKPOINTS_DIR) / name
+        return str(base) if self.SEED == 42 else str(base) + f"_seed{self.SEED}"
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -91,6 +98,11 @@ class LoRAExperimentConfig(Config):
     EXPERIMENT_ID: str = "C"
     LR: float = 3e-4
     NUM_EPOCHS: int = 10
+    # Aligné sur B/E/F (warmup=500): un LR=3e-4 sans warmup est le seul cas du
+    # protocole à démarrer sans montée progressive, ce qui déstabilise le début
+    # d'entraînement et peut déclencher un early stopping prématuré (patience=2,
+    # val_check_interval=0.5 => arrêt possible après une seule epoch sans gain).
+    WARMUP_STEPS: int = 500
 
 
 @dataclass

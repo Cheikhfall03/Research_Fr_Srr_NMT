@@ -5,6 +5,7 @@ de recycler ``train.json``, car cela ne constituerait pas l'expérience annoncé
 """
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import sys
@@ -26,7 +27,28 @@ from models.model_lora import NLLBFineTuner
 from reproducibility import best_checkpoint, seed_everything, write_manifest
 
 
+# Seed fixe pour le tirage des phrases back-traduites (indépendant du seed
+# d'entraînement) afin qu'une étude multi-seed ne varie que l'initialisation/
+# l'ordre de mini-batchs du LoRA forward, pas le contenu de l'augmentation.
+AUGMENT_SEED = 42
+
+parser = argparse.ArgumentParser(description="Config D (Full FT inverse + LoRA FR->SRR + back-translation)")
+parser.add_argument("--seed", type=int, default=None,
+                     help="Écrase cfg.SEED pour les runs multi-seed (défaut: 42). "
+                          "N'affecte que l'entraînement forward, pas l'augmentation.")
+parser.add_argument("--prepare-only", action="store_true",
+                     help="Entraîne le modèle inverse, back-traduit et augmente, puis s'arrête "
+                          "(pas d'entraînement forward). À lancer UNE SEULE FOIS avant de "
+                          "paralléliser plusieurs seeds sur cette config, car ces étapes partagent "
+                          "des fichiers (backtranslated.json, train_augmented.json, "
+                          "checkpoints/config_D_reverse) qui ne supportent pas l'écriture concurrente.")
+args, _unknown = parser.parse_known_args()  # parse_known_args: ce module est importé (pas seulement
+                                             # exécuté) par tests/test_urgent_configs.py; parse_args()
+                                             # planterait sur des argv étrangers (ex. lancé via pytest).
+
 cfg = BackTranslationConfig()
+if args.seed is not None:
+    cfg.SEED = args.seed
 seed_everything(cfg.SEED)
 BT_PATH = Path(cfg.DATA_DIR) / "backtranslated.json"
 AUG_PATH = Path(cfg.DATA_DIR) / "train_augmented.json"
@@ -155,7 +177,7 @@ def augment() -> None:
     original = json.loads((Path(cfg.DATA_DIR) / "train.json").read_text(encoding="utf-8"))
     synthetic = json.loads(BT_PATH.read_text(encoding="utf-8"))
     count = min(round(len(original) * cfg.BT_RATIO), len(synthetic))
-    generator = torch.Generator().manual_seed(cfg.SEED)
+    generator = torch.Generator().manual_seed(AUGMENT_SEED)
     indices = torch.randperm(len(synthetic), generator=generator)[:count].tolist()
     augmented = original + [synthetic[i] for i in indices]
     AUG_PATH.write_text(json.dumps(augmented, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -169,14 +191,31 @@ def train_forward() -> str:
 
 
 def main() -> None:
-    checkpoint = train_reverse()
-    backtranslate(checkpoint)
-    augment()
+    # AUG_PATH déjà présent => la préparation (modèle inverse, back-traduction,
+    # augmentation) a déjà tourné, par ce process ou un précédent --prepare-only.
+    # On ne la refait pas: ces étapes écrivent des fichiers partagés entre tous
+    # les seeds et ne sont pas sûres à exécuter en parallèle (voir --prepare-only).
+    if AUG_PATH.exists():
+        print(f"Augmentation déjà préparée ({AUG_PATH}) — réutilisation, "
+              "pas de nouvel entraînement du modèle inverse ni de back-traduction.")
+        checkpoint = str(REVERSE_DIR)
+    else:
+        checkpoint = train_reverse()
+        backtranslate(checkpoint)
+        augment()
+
+    if args.prepare_only:
+        print("Préparation terminée (--prepare-only): pas d'entraînement forward.")
+        return
+
     best = train_forward()
-    write_manifest(cfg, Path(cfg.RESULTS_DIR) / "config_D_manifest.json",
+    manifest_name = "config_D_manifest.json" if cfg.SEED == 42 else f"config_D_manifest_seed{cfg.SEED}.json"
+    write_manifest(cfg, Path(cfg.RESULTS_DIR) / manifest_name,
                    [Path(cfg.DATA_DIR) / "train.json", cfg.MONOLINGUAL_SR_PATH, BT_PATH, AUG_PATH],
                    reverse_checkpoint=checkpoint, best_checkpoint=best)
 
 
 if __name__ == "__main__":
+    print(f"=== Config D : Full FT inverse + LoRA + back-translation (seed={cfg.SEED}) ===")
+    print(f"Checkpoints -> {cfg.CHECKPOINTS_D}")
     main()

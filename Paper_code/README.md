@@ -16,7 +16,7 @@ this checkout. Do not remove that distinction when publishing.
 |---|---|---|
 | A | NLLB Wolof-target proximity probe | no training, beam 5 |
 | B | NLLB full fine-tuning | 10 epochs, LR 2e-5, batch 32, warmup 500 |
-| C | NLLB + LoRA | rank 16, alpha 32, dropout .1, LR 3e-4, 10 epochs |
+| C | NLLB + LoRA | rank 16, alpha 32, dropout .1, LR 3e-4, 10 epochs, warmup 500 |
 | D | C + back-translation | full-FT inverse model, independent SRR mono, 30% synthetic |
 | E | OPUS-MT full FT | pretrained French encoder, reinitialized 8k Serer decoder vocabulary, 15 epochs |
 | F | Transformer from scratch | 3+3 layers, d=128, FF=256, 4 heads, dropout .3, 30 epochs |
