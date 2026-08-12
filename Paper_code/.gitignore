@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+checkpoints/
+outputs/
+results/*/version_*/
+data/*.json
+data/*.jsonl
+baselines/tokenizer/corpus_combined.txt
+*.ckpt
+*.safetensors
+wandb/
+hf_export/

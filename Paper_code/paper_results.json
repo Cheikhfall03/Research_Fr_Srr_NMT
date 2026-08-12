@@ -1,0 +1,12 @@
+{
+  "status": "reported_in_manuscript_not_reproduced_by_this_checkout",
+  "warning": "Do not present these numbers as reproduced until checkpoints, predictions and manifests are available.",
+  "results": {
+    "F": {"bleu": 7.28, "bertscore_f1": 0.846, "rougeL": 0.259, "loss": 2.59, "linguistic_score": "0.5/5"},
+    "A": {"bleu": 17.98, "bertscore_f1": 0.797, "rougeL": 0.029, "loss": 7.54, "linguistic_score": "1/5"},
+    "E": {"bleu": 21.88, "bertscore_f1": 0.885, "rougeL": 0.420, "loss": 1.63, "linguistic_score": "3/5"},
+    "C": {"bleu": 24.08, "bertscore_f1": 0.889, "rougeL": 0.441, "loss": 1.75, "linguistic_score": "1/5"},
+    "D": {"bleu": 24.70, "bertscore_f1": 0.890, "rougeL": 0.450, "loss": 1.72, "linguistic_score": "2/5"},
+    "B": {"bleu": 28.25, "bertscore_f1": 0.897, "rougeL": 0.480, "loss": 1.59, "linguistic_score": "2/5"}
+  }
+}
