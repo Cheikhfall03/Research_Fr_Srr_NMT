@@ -148,6 +148,18 @@ run_step "19_correctors_package" python build_correctors_package.py --configs B 
 ARCHIVE="revision_cnria2026_$(date +%Y%m%d_%H%M).tar.gz"
 tar -czf "${ARCHIVE}" results/ annotations/round2_correctors/ outputs/ 2>/dev/null || \
   tar -czf "${ARCHIVE}" results/ annotations/round2_correctors/
+
+# --- 9. Dépôt sur Google Drive (best-effort, non bloquant) -----------------
+# Nécessite rclone configuré sur CETTE machine avec un remote "gdrive:"
+# (copiez ~/.config/rclone/rclone.conf depuis votre machine locale vers le
+# pod si ce n'est pas déjà fait). N'échoue jamais le pipeline: les résultats
+# restent de toute façon dans l'archive locale ci-dessus.
+STEP=$((STEP + 1))
+echo ""
+echo "=== [Étape ${STEP}] 20_deploy_drive ==="
+bash deploy_to_drive.sh 2>&1 | tee "${LOG_DIR}/${STEP}_20_deploy_drive.log" || \
+  echo "Dépôt Drive échoué ou ignoré — voir ${LOG_DIR}/${STEP}_20_deploy_drive.log (non bloquant)."
+
 echo ""
 echo "########################################################"
 echo "# Pipeline terminé avec succès."
