@@ -8,13 +8,17 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from config import OpusMTConfig, ScratchConfig
+from config import OpusMTConfig, ScratchConfig, LoRAExperimentConfig, BackTranslationConfig
 from baselines.models.model_scratch import ScratchDataModule
 import training.train_D_backtranslation as config_d
 
 
 assert OpusMTConfig().WARMUP_STEPS > 0
 assert ScratchConfig().WARMUP_STEPS > 0
+# C/D utilisent le LR le plus élevé du protocole (3e-4); un warmup=0 les rendait
+# instables au démarrage et pouvait déclencher un early stopping prématuré.
+assert LoRAExperimentConfig().WARMUP_STEPS > 0
+assert BackTranslationConfig().WARMUP_STEPS > 0
 
 # Le DataModule F doit joindre DATA_DIR et les noms de fichiers correctement.
 scratch_cfg = ScratchConfig()

@@ -1,0 +1,126 @@
+{
+  "train": {
+    "n_sentences": 23113,
+    "francais_words": {
+      "min": 1,
+      "max": 97,
+      "mean": 21.84,
+      "median": 21,
+      "p95": 45
+    },
+    "serere_words": {
+      "min": 1,
+      "max": 118,
+      "mean": 21.61,
+      "median": 20,
+      "p95": 47
+    },
+    "francais_nllb_tokens": {
+      "min": 3,
+      "max": 151,
+      "mean": 36.98,
+      "median": 35,
+      "p95": 73
+    },
+    "serere_nllb_tokens": {
+      "min": 3,
+      "max": 208,
+      "mean": 40.51,
+      "median": 38,
+      "p95": 84
+    }
+  },
+  "val": {
+    "n_sentences": 2889,
+    "francais_words": {
+      "min": 1,
+      "max": 80,
+      "mean": 21.94,
+      "median": 20,
+      "p95": 44
+    },
+    "serere_words": {
+      "min": 1,
+      "max": 91,
+      "mean": 21.72,
+      "median": 20,
+      "p95": 46
+    },
+    "francais_nllb_tokens": {
+      "min": 3,
+      "max": 126,
+      "mean": 37.19,
+      "median": 35,
+      "p95": 73
+    },
+    "serere_nllb_tokens": {
+      "min": 3,
+      "max": 148,
+      "mean": 40.71,
+      "median": 38,
+      "p95": 83
+    }
+  },
+  "test": {
+    "n_sentences": 2890,
+    "francais_words": {
+      "min": 1,
+      "max": 76,
+      "mean": 21.71,
+      "median": 21.0,
+      "p95": 43
+    },
+    "serere_words": {
+      "min": 1,
+      "max": 79,
+      "mean": 21.3,
+      "median": 20.0,
+      "p95": 45
+    },
+    "francais_nllb_tokens": {
+      "min": 3,
+      "max": 117,
+      "mean": 36.79,
+      "median": 35.0,
+      "p95": 71
+    },
+    "serere_nllb_tokens": {
+      "min": 3,
+      "max": 155,
+      "mean": 39.94,
+      "median": 37.0,
+      "p95": 82
+    }
+  },
+  "udhr_calibration": {
+    "n_sentences": 50,
+    "francais_words": {
+      "min": 7,
+      "max": 75,
+      "mean": 30.66,
+      "median": 26.5,
+      "p95": 57
+    },
+    "serere_words": {
+      "min": 8,
+      "max": 49,
+      "mean": 24.78,
+      "median": 21.0,
+      "p95": 42
+    },
+    "francais_nllb_tokens": {
+      "min": 11,
+      "max": 115,
+      "mean": 47.1,
+      "median": 40.5,
+      "p95": 87
+    },
+    "serere_nllb_tokens": {
+      "min": 14,
+      "max": 87,
+      "mean": 42.74,
+      "median": 38.5,
+      "p95": 71
+    }
+  }
+}

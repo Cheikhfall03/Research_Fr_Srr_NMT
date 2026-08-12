@@ -6,9 +6,11 @@ checkpoints/
 outputs/
 results/*/version_*/
 data/*.json
+!data/udhr_fr_srr_probe_test.json
 data/*.jsonl
 baselines/tokenizer/corpus_combined.txt
 *.ckpt
 *.safetensors
 wandb/
 hf_export/
+.~lock.*#

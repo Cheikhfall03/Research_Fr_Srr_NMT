@@ -2,6 +2,7 @@
 Config C — NLLB-200 + LoRA (configuration principale).
 Checkpoints → checkpoints/config_C/
 """
+import argparse
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -15,7 +16,16 @@ from reproducibility import seed_everything, write_manifest
 from models.model_lora import NLLBFineTuner
 from dataset import TranslationDataModule
 
+parser = argparse.ArgumentParser(description="Entraînement Config C (NLLB-200 + LoRA)")
+parser.add_argument("--seed", type=int, default=None,
+                     help="Écrase cfg.SEED pour les runs multi-seed (défaut: 42).")
+args, _unknown = parser.parse_known_args()  # parse_known_args: le module est importé (pas seulement
+                                             # exécuté) par tests/test_urgent_configs.py; parse_args()
+                                             # planterait sur des argv étrangers (ex. lancé via pytest).
+
 cfg = LoRAExperimentConfig()
+if args.seed is not None:
+    cfg.SEED = args.seed
 seed_everything(cfg.SEED)
 os.makedirs(cfg.CHECKPOINTS_C, exist_ok=True)
 os.makedirs(cfg.RESULTS_DIR, exist_ok=True)
@@ -53,10 +63,11 @@ trainer = L.Trainer(
 )
 
 if __name__ == "__main__":
-    print(f"=== Config C : NLLB-200 + LoRA ({n_gpus} GPU(s)) ===")
+    print(f"=== Config C : NLLB-200 + LoRA (seed={cfg.SEED}, {n_gpus} GPU(s)) ===")
     print(f"Checkpoints -> {cfg.CHECKPOINTS_C}")
     trainer.fit(model, datamodule=datamodule)
-    write_manifest(cfg, os.path.join(cfg.RESULTS_DIR, "config_C_manifest.json"),
+    manifest_name = "config_C_manifest.json" if cfg.SEED == 42 else f"config_C_manifest_seed{cfg.SEED}.json"
+    write_manifest(cfg, os.path.join(cfg.RESULTS_DIR, manifest_name),
                    [os.path.join(cfg.DATA_DIR, x) for x in ("train.json", "val.json")],
                    best_checkpoint=checkpoint_cb.best_model_path)
     print(f"Meilleur checkpoint : {checkpoint_cb.best_model_path}")

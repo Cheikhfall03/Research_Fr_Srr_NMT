@@ -49,7 +49,7 @@ def generate(model, tokenizer, rows, cfg):
     return predictions, round(float(np.mean(losses)), 4)
 
 
-def load_experiment(name):
+def load_experiment(name, seed=None):
     if name == "A":
         cfg = ProbeConfig()
         tokenizer = NllbTokenizerFast.from_pretrained(cfg.MODEL_NAME, revision=cfg.MODEL_REVISION,
@@ -57,15 +57,21 @@ def load_experiment(name):
         return cfg, AutoModelForSeq2SeqLM.from_pretrained(cfg.MODEL_NAME, revision=cfg.MODEL_REVISION), tokenizer, None
     if name == "B":
         from models.model_full import NLLBFullFineTuner
-        cfg = FullFTConfig(); checkpoint = best_checkpoint(cfg.CHECKPOINTS_B)
+        cfg = FullFTConfig()
+        if seed is not None: cfg.SEED = seed
+        checkpoint = best_checkpoint(cfg.CHECKPOINTS_B)
         module = NLLBFullFineTuner.load_from_checkpoint(checkpoint, cfg=cfg)
     elif name == "C":
         from models.model_lora import NLLBFineTuner
-        cfg = LoRAExperimentConfig(); checkpoint = best_checkpoint(cfg.CHECKPOINTS_C)
+        cfg = LoRAExperimentConfig()
+        if seed is not None: cfg.SEED = seed
+        checkpoint = best_checkpoint(cfg.CHECKPOINTS_C)
         module = NLLBFineTuner.load_from_checkpoint(checkpoint, cfg=cfg)
     else:
         from models.model_lora import NLLBFineTuner
-        cfg = BackTranslationConfig(); checkpoint = best_checkpoint(cfg.CHECKPOINTS_D)
+        cfg = BackTranslationConfig()
+        if seed is not None: cfg.SEED = seed
+        checkpoint = best_checkpoint(cfg.CHECKPOINTS_D)
         module = NLLBFineTuner.load_from_checkpoint(checkpoint, cfg=cfg)
     return cfg, module.model, module.tokenizer, checkpoint
 
@@ -73,30 +79,34 @@ def load_experiment(name):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--configs", nargs="+", choices=list("ABCD"), default=list("ABCD"))
+    parser.add_argument("--seed", type=int, default=None,
+                         help="Charge le checkpoint entraîné avec ce seed (config_X_seedN) "
+                              "et suffixe les fichiers de sortie en conséquence. Ignoré pour A.")
     args = parser.parse_args()
+    suffix = "" if args.seed is None else f"_seed{args.seed}"
     base = ProbeConfig(); test_path = Path(base.DATA_DIR) / "test.json"
     rows = json.loads(test_path.read_text(encoding="utf-8"))
     all_scores = {}
     for name in args.configs:
-        cfg, model, tokenizer, checkpoint = load_experiment(name)
+        cfg, model, tokenizer, checkpoint = load_experiment(name, seed=args.seed)
         model.eval().to(DEVICE)
         predictions, loss = generate(model, tokenizer, rows, cfg)
         refs = [x["serere"] for x in rows]
         score = {**metrics(predictions, refs, cfg), "loss": loss,
-                 "checkpoint": checkpoint, "test_sha256": sha256(test_path)}
+                 "checkpoint": checkpoint, "test_sha256": sha256(test_path), "seed": cfg.SEED}
         all_scores[name] = score
         prediction_rows = [{"id": i, "francais": row["francais"], "serere_reference": row["serere"],
                             "prediction": pred} for i, (row, pred) in enumerate(zip(rows, predictions))]
         Path(cfg.OUTPUTS_DIR).mkdir(parents=True, exist_ok=True)
-        (Path(cfg.OUTPUTS_DIR) / f"predictions_{name}.jsonl").write_text(
+        (Path(cfg.OUTPUTS_DIR) / f"predictions_{name}{suffix}.jsonl").write_text(
             "".join(json.dumps(x, ensure_ascii=False) + "\n" for x in prediction_rows), encoding="utf-8")
-        write_manifest(cfg, Path(cfg.RESULTS_DIR) / f"evaluation_{name}_manifest.json", [test_path], metrics=score)
+        write_manifest(cfg, Path(cfg.RESULTS_DIR) / f"evaluation_{name}{suffix}_manifest.json", [test_path], metrics=score)
         del model
         if torch.cuda.is_available(): torch.cuda.empty_cache()
     results = Path(base.RESULTS_DIR); results.mkdir(parents=True, exist_ok=True)
-    (results / "evaluation_test.json").write_text(json.dumps(all_scores, ensure_ascii=False, indent=2), encoding="utf-8")
-    fields = ["config", "bleu", "chrf", "rouge1", "rougeL", "bertscore_f1", "loss", "checkpoint", "test_sha256"]
-    with open(results / "evaluation_test.csv", "w", newline="", encoding="utf-8") as stream:
+    (results / f"evaluation_test{suffix}.json").write_text(json.dumps(all_scores, ensure_ascii=False, indent=2), encoding="utf-8")
+    fields = ["config", "bleu", "chrf", "rouge1", "rougeL", "bertscore_f1", "loss", "checkpoint", "test_sha256", "seed"]
+    with open(results / f"evaluation_test{suffix}.csv", "w", newline="", encoding="utf-8") as stream:
         writer = csv.DictWriter(stream, fieldnames=fields); writer.writeheader()
         for name, score in all_scores.items(): writer.writerow({"config": name, **score})
 

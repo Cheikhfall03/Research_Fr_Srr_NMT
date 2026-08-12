@@ -33,6 +33,22 @@ CKPT_DIRS = {
     "opusmt":  os.path.join(cfg.CHECKPOINTS_DIR, "baseline_opusmt"),
 }
 
+# Lettres cohérentes avec config.py (E = opus-mt, F = scratch) afin que
+# bootstrap_significance.py et build_correctors_package.py puissent traiter
+# les baselines exactement comme les configs A-D.
+MODEL_TO_LETTER = {"opusmt": "E", "scratch": "F"}
+
+
+def write_predictions(model_key: str, data: list[dict], preds: list[str]) -> None:
+    letter = MODEL_TO_LETTER[model_key]
+    os.makedirs(cfg.OUTPUTS_DIR, exist_ok=True)
+    rows = [{"id": i, "francais": row["francais"], "serere_reference": row["serere"], "prediction": pred}
+            for i, (row, pred) in enumerate(zip(data, preds))]
+    path = os.path.join(cfg.OUTPUTS_DIR, f"predictions_{letter}.jsonl")
+    with open(path, "w", encoding="utf-8") as stream:
+        stream.write("".join(json.dumps(x, ensure_ascii=False) + "\n" for x in rows))
+    print(f"  prédictions -> {path}")
+
 
 def load_test_data():
     with open(os.path.join(cfg.DATA_DIR, "test.json"), encoding="utf-8") as f:
@@ -111,6 +127,7 @@ def eval_scratch(data):
         with torch.no_grad():
             gen = pl.model.generate(src, amsk, max_new_tokens=cfg.MAX_LENGTH)
         preds.extend([tokenizer.decode(g.tolist()) for g in gen])
+    write_predictions("scratch", data, preds)
     metrics = compute_metrics(preds, refs)
     # loss
     total, n = 0.0, 0
@@ -157,6 +174,7 @@ def eval_opusmt(data):
             generated = pl.model.generate(**enc, max_new_tokens=local_cfg.MAX_LENGTH,
                                           num_beams=local_cfg.NUM_BEAMS_TEST)
         preds.extend(pl.target_tokenizer.batch_decode(generated))
+    write_predictions("opusmt", data, preds)
     metrics = compute_metrics(preds, refs)
     metrics["loss"] = round(float(np.mean(losses)), 4)
     del pl; torch.cuda.empty_cache()

@@ -1,4 +1,4 @@
-.PHONY: prepare tokenizer train-b train-c train-d train-e train-f evaluate check
+.PHONY: prepare tokenizer train-b train-c train-d train-e train-f evaluate check pipeline multiseed
 
 prepare:
 	python prepare_data.py
@@ -29,3 +29,9 @@ check:
 	python -m compileall -q .
 	python tests/test_data_pipeline.py
 	python tests/test_urgent_configs.py
+
+multiseed:
+	python training/run_multiseed.py --configs C D --seeds 42 43 44
+
+pipeline:
+	bash run_full_pipeline.sh --skip-setup

@@ -16,7 +16,7 @@ pip install \
     datasets==3.2.0 \
     evaluate==0.4.3 \
     pyarrow==18.1.0 \
-    accelerate>=0.26.0
+    "accelerate>=0.26.0"
 
 echo "=== Installing training & metrics ==="
 pip install \
