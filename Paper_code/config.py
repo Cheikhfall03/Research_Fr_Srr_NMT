@@ -31,7 +31,13 @@ class Config:
     WARMUP_STEPS: int = 0
     WEIGHT_DECAY: float = 0.1
     EARLY_STOPPING_PATIENCE: int = 2
-    NUM_BEAMS_VAL: int = 4
+    # Beam=1 (glouton) en validation seulement, pour accélérer le monitoring
+    # pendant l'entraînement: la génération beam-search domine largement le
+    # temps de validation. Le test final garde NUM_BEAMS_TEST=5 (inchangé),
+    # donc les métriques rapportées dans le papier ne sont pas affectées —
+    # seule la sélection de checkpoint utilise un signal BLEU glouton
+    # (fortement corrélé au classement obtenu en beam search).
+    NUM_BEAMS_VAL: int = 1
     NUM_BEAMS_TEST: int = 5
     GRAD_ACCUM_STEPS: int = 4
     SEED: int = 42
@@ -107,7 +113,7 @@ class LoRAExperimentConfig(Config):
     # Aligné sur B/E/F (warmup=500): un LR=3e-4 sans warmup est le seul cas du
     # protocole à démarrer sans montée progressive, ce qui déstabilise le début
     # d'entraînement et peut déclencher un early stopping prématuré (patience=2,
-    # val_check_interval=0.5 => arrêt possible après une seule epoch sans gain).
+    # val_check_interval=1.0 => arrêt possible après 2 epochs sans gain).
     WARMUP_STEPS: int = 500
 
 
