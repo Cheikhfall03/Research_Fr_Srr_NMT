@@ -93,7 +93,7 @@ def trainer_for(cfg_obj, checkpoint_dir, name, patience=None):
         callbacks=[checkpoint, EarlyStopping(
             monitor="val_bleu", patience=patience or cfg_obj.EARLY_STOPPING_PATIENCE, mode="max")],
         logger=CSVLogger(cfg_obj.RESULTS_DIR, name=name), log_every_n_steps=50,
-        val_check_interval=0.5,
+        val_check_interval=1.0,
     )
     return trainer, checkpoint
 

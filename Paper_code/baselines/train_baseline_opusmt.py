@@ -47,7 +47,7 @@ trainer = L.Trainer(
     callbacks=[checkpoint_cb, early_stop_cb],
     logger=logger,
     log_every_n_steps=50,
-    val_check_interval=0.5,
+    val_check_interval=1.0,
     gradient_clip_val=1.0,
 )
 
