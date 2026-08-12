@@ -19,7 +19,13 @@ class Config:
     # Le sérère est absent de NLLB. wol_Latn sert de proxy de décodage.
     TGT_LANG: str = "wol_Latn"
     MAX_LENGTH: int = 128
-    BATCH_SIZE: int = 32
+    # BATCH_SIZE=32 en une passe sature une RTX 4090 24GB pour le full FT NLLB-200
+    # (600M params, précision mixte) combiné à la génération beam-search en
+    # validation (même batch, cf. dataset.py) -> CUDA OOM observé en pratique.
+    # BATCH_SIZE=8 + GRAD_ACCUM_STEPS=4 reproduit le batch effectif de 32
+    # documenté dans le papier pour l'entraînement, tout en réduisant d'autant
+    # la mémoire de la génération de validation.
+    BATCH_SIZE: int = 8
     NUM_EPOCHS: int = 0
     LR: float = 0.0
     WARMUP_STEPS: int = 0
@@ -27,7 +33,7 @@ class Config:
     EARLY_STOPPING_PATIENCE: int = 2
     NUM_BEAMS_VAL: int = 4
     NUM_BEAMS_TEST: int = 5
-    GRAD_ACCUM_STEPS: int = 1
+    GRAD_ACCUM_STEPS: int = 4
     SEED: int = 42
     TRAIN_RATIO: float = 0.80
     VAL_RATIO: float = 0.10
@@ -109,7 +115,10 @@ class LoRAExperimentConfig(Config):
 class BackTranslationConfig(LoRAExperimentConfig):
     EXPERIMENT_ID: str = "D"
     BT_RATIO: float = 0.30
-    BT_BATCH_SIZE: int = 32
+    # Génération pure (pas de rétropropagation) donc moins gourmande que
+    # l'entraînement, mais réduite par prudence après l'OOM observé sur B avec
+    # BATCH_SIZE=32 sur RTX 4090 24GB.
+    BT_BATCH_SIZE: int = 16
     EXPECTED_MONOLINGUAL_SIZE: int = 8500
 
 
