@@ -58,7 +58,16 @@ python baselines/train_baseline_scratch.py
 Configuration D additionally requires
 `corpus/serere_monolingual.txt`, one independent Serer sentence per line. The
 script verifies its minimum size and removes overlap with the parallel train set.
-It intentionally fails when that resource is unavailable.
+It intentionally fails when that resource is unavailable. It can be built from
+the CC BY 4.0 Kallaama Sereer transcriptions (checked recordings first, completed
+with raw-only recordings) while preserving provenance and removing exact overlap:
+
+```bash
+python build_kallaama_monolingual.py
+```
+
+This writes `corpus/serere_monolingual.txt` and its provenance manifest
+`corpus/serere_monolingual.manifest.json`. Cite Kallaama when using these data.
 
 Evaluate and preserve every prediction:
 

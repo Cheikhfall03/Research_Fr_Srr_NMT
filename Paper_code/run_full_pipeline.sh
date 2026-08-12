@@ -73,7 +73,11 @@ python -c "import torch; print(f'  {torch.cuda.device_count()} GPU(s)'); [print(
 echo "########################################################"
 
 # --- -1. Vérification amont des prérequis --------------------------------
-for f in "corpus/Corpus_Français_Serere_Aligné.txt" "corpus/serere_monolingual.txt" "data/udhr_fr_srr_probe_test.json"; do
+# Le corpus parallèle et le probe UDHR ne peuvent pas être régénérés par ce
+# script (pas de source de téléchargement automatique) — ils doivent déjà être
+# dans le repo cloné sur le pod. Le corpus monolingue sérère, lui, peut être
+# reconstruit automatiquement depuis Kallaama (voir étape 01b ci-dessous).
+for f in "corpus/Corpus_Français_Serere_Aligné.txt" "data/udhr_fr_srr_probe_test.json"; do
   if [[ ! -f "$f" ]]; then
     echo "ERREUR: fichier requis absent: $f"
     echo "Ce script ne télécharge pas le corpus — vérifiez que le repo cloné sur le pod le contient."
@@ -106,6 +110,11 @@ fi
 
 # --- 1. Données -----------------------------------------------------------
 run_step "01_prepare_data" python prepare_data.py --overwrite
+if [[ ! -f "corpus/serere_monolingual.txt" ]]; then
+  run_step "01b_build_kallaama_monolingual" python build_kallaama_monolingual.py
+else
+  echo "[corpus/serere_monolingual.txt déjà présent — construction Kallaama ignorée]"
+fi
 run_step "02_check_pipeline" python -m compileall -q .
 run_step "03_test_data_pipeline" python tests/test_data_pipeline.py
 run_step "03b_test_urgent_configs" python tests/test_urgent_configs.py
@@ -159,6 +168,16 @@ echo ""
 echo "=== [Étape ${STEP}] 20_deploy_drive ==="
 bash deploy_to_drive.sh 2>&1 | tee "${LOG_DIR}/${STEP}_20_deploy_drive.log" || \
   echo "Dépôt Drive échoué ou ignoré — voir ${LOG_DIR}/${STEP}_20_deploy_drive.log (non bloquant)."
+
+# --- 10. Publication des meilleurs modèles sur Hugging Face (best-effort) --
+# Nécessite une session HF active sur CETTE machine (huggingface-cli login,
+# ou variable HF_TOKEN). Dépôts privés par défaut (HF_ORG=Fallovski).
+# N'échoue jamais le pipeline: ignore proprement les configs sans checkpoint.
+STEP=$((STEP + 1))
+echo ""
+echo "=== [Étape ${STEP}] 21_deploy_huggingface ==="
+HF_ORG="${HF_ORG:-Fallovski}" bash deploy_to_huggingface.sh 2>&1 | tee "${LOG_DIR}/${STEP}_21_deploy_huggingface.log" || \
+  echo "Dépôt Hugging Face échoué ou ignoré — voir ${LOG_DIR}/${STEP}_21_deploy_huggingface.log (non bloquant)."
 
 echo ""
 echo "########################################################"
