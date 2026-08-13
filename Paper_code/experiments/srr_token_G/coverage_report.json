@@ -1,0 +1,142 @@
+{
+  "francais_brut": {
+    "n_sentences": 23113,
+    "n_words": 504895,
+    "n_tokens": 808444,
+    "tokens_per_word": 1.601,
+    "unk_count": 11508,
+    "unk_rate_pct": 1.4235,
+    "unk_characters_top10": [
+      [
+        "«",
+        4545
+      ],
+      [
+        "»",
+        4427
+      ],
+      [
+        "”",
+        923
+      ],
+      [
+        "“",
+        867
+      ],
+      [
+        "–",
+        720
+      ],
+      [
+        "’",
+        10
+      ],
+      [
+        "‘",
+        9
+      ],
+      [
+        "«“",
+        4
+      ],
+      [
+        "”»",
+        3
+      ]
+    ]
+  },
+  "serere_brut": {
+    "n_sentences": 23113,
+    "n_words": 499561,
+    "n_tokens": 890177,
+    "tokens_per_word": 1.782,
+    "unk_count": 29883,
+    "unk_rate_pct": 3.357,
+    "unk_characters_top10": [
+      [
+        "’",
+        13526
+      ],
+      [
+        "ƥ",
+        6861
+      ],
+      [
+        "»",
+        3949
+      ],
+      [
+        "«",
+        3541
+      ],
+      [
+        "ƈ",
+        1234
+      ],
+      [
+        "’’",
+        318
+      ],
+      [
+        "Ƥ",
+        193
+      ],
+      [
+        "Ƭ",
+        173
+      ],
+      [
+        "ƥ’",
+        48
+      ],
+      [
+        "–",
+        9
+      ]
+    ]
+  },
+  "francais_normalise": {
+    "n_sentences": 23113,
+    "n_words": 504895,
+    "n_tokens": 800090,
+    "tokens_per_word": 1.585,
+    "unk_count": 0,
+    "unk_rate_pct": 0.0,
+    "unk_characters_top10": []
+  },
+  "serere_normalise": {
+    "n_sentences": 23113,
+    "n_words": 499561,
+    "n_tokens": 885842,
+    "tokens_per_word": 1.773,
+    "unk_count": 8540,
+    "unk_rate_pct": 0.9641,
+    "unk_characters_top10": [
+      [
+        "ƥ",
+        6909
+      ],
+      [
+        "ƈ",
+        1239
+      ],
+      [
+        "Ƥ",
+        202
+      ],
+      [
+        "Ƭ",
+        180
+      ],
+      [
+        "Ƈ",
+        8
+      ],
+      [
+        "„",
+        2
+      ]
+    ]
+  },
+  "verdict": "EXTENSION CIBLÉE NÉCESSAIRE: après normalisation de la ponctuation, le sérère garde 0.964 points de <unk> de plus que le français (voir unk_characters_top10 de serere_normalise) -> ce sont des lettres sérères réellement absentes du vocabulaire, pas de la ponctuation -> ajouter ces quelques caractères manquants au vocabulaire (extension minimale, pas un nouveau tokenizer complet)."
+}
