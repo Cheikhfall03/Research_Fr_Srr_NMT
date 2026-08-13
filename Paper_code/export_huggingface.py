@@ -43,8 +43,15 @@ def load(experiment):
     if experiment == "G":
         # Expérience hors protocole du papier: LoRA avec un vrai token srr_Latn
         # (au lieu du proxy wol_Latn) — voir experiments/srr_token_G/.
+        import sys
         from models.model_lora import NLLBFineTuner
         from experiments.srr_token_G.train_G_srr_token import SrrTokenConfig
+        # Le checkpoint a été sauvegardé pendant que train_G_srr_token.py tournait
+        # en tant que __main__: torch a pickle SrrTokenConfig sous le module
+        # "__main__", pas sous son chemin d'import réel. On l'y rend accessible
+        # explicitement pour que torch.load() retrouve la classe, quel que soit
+        # le script (ici export_huggingface.py) qui charge le checkpoint.
+        sys.modules["__main__"].SrrTokenConfig = SrrTokenConfig
         cfg = SrrTokenConfig()
         checkpoint = best_checkpoint(cfg.CHECKPOINTS_G)
         module = NLLBFineTuner.load_from_checkpoint(checkpoint, cfg=cfg)
