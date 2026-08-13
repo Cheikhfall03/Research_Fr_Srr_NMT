@@ -108,6 +108,19 @@ class OpusMTFineTuner(L.LightningModule):
         self.model.config.decoder_start_token_id = BOS_ID
         self.model.config.pad_token_id = PAD_ID
         self.model.config.eos_token_id = EOS_ID
+        # model.generation_config (transformers >=4.26) est un objet SÉPARÉ de
+        # model.config, chargé depuis generation_config.json du checkpoint
+        # opus-mt-fr-en d'origine et jamais synchronisé automatiquement. generate()
+        # lit ces valeurs en priorité -> sans ce bloc, decoder_start_token_id/
+        # pad_token_id/bad_words_ids pointent encore vers l'ancien vocabulaire de
+        # 59514 tokens (ex. 59513), hors bornes du nouveau vocabulaire sérère
+        # (8000) -> IndexError sur l'embedding du décodeur au premier generate().
+        self.model.generation_config.decoder_start_token_id = BOS_ID
+        self.model.generation_config.bos_token_id = BOS_ID
+        self.model.generation_config.pad_token_id = PAD_ID
+        self.model.generation_config.eos_token_id = EOS_ID
+        self.model.generation_config.forced_eos_token_id = EOS_ID
+        self.model.generation_config.bad_words_ids = None
         self.metric_bleu = evaluate.load("sacrebleu")
         self.metric_rouge = evaluate.load("rouge")
         self.metric_bertscore = evaluate.load("bertscore")
