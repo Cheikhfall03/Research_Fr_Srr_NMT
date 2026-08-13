@@ -145,7 +145,7 @@ def write_docx(all_rows: list[dict], path: Path, n_samples: int, configs: list[s
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--configs", nargs="+", choices=list("ABCDE"), default=list("BCDE"))
+    parser.add_argument("--configs", nargs="+", choices=list("ABCDEFG"), default=list("BCDE"))
     parser.add_argument("--n-samples", type=int, default=30)
     parser.add_argument("--seed", type=int, default=42, help="Seed du tirage aléatoire des phrases échantillonnées.")
     parser.add_argument("--outputs-dir", default="outputs")
