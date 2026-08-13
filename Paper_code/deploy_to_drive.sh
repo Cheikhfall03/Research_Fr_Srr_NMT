@@ -59,7 +59,7 @@ for label, directory in dirs.items():
 
 Path("results").mkdir(parents=True, exist_ok=True)
 Path("results/best_checkpoints_manifest.txt").write_text(
-    "\n".join(f"{label}\t{path}" for label, path in found.items()), encoding="utf-8"
+    "".join(f"{label}\t{path}\n" for label, path in found.items()), encoding="utf-8"
 )
 for label, path in found.items():
     print(f"  {label}: {Path(path).name}")
