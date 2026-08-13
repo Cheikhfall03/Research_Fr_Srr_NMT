@@ -32,8 +32,9 @@ checkpoint_cb = ModelCheckpoint(
     auto_insert_metric_name=False,
     monitor="val_bleu",
     mode="max",
-    save_top_k=3,
+    save_top_k=1,
     save_last=True,
+    save_weights_only=True,  # jamais de resume d'entrainement dans ce code, seulement load_from_checkpoint (poids) -> inutile de payer le stockage de l'etat optimizer Adam (~3x la taille du modele)
 )
 early_stop_cb = EarlyStopping(monitor="val_bleu", patience=cfg.EARLY_STOPPING_PATIENCE, mode="max")
 logger = CSVLogger(cfg.RESULTS_DIR, name="baseline_opusmt")

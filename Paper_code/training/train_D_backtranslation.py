@@ -84,7 +84,12 @@ def trainer_for(cfg_obj, checkpoint_dir, name, patience=None):
     checkpoint = ModelCheckpoint(
         dirpath=str(checkpoint_dir),
         filename=f"{name}-epoch={{epoch:02d}}-val_bleu={{val_bleu:.4f}}",
-        auto_insert_metric_name=False, monitor="val_bleu", mode="max", save_top_k=3, save_last=True,
+        auto_insert_metric_name=False, monitor="val_bleu", mode="max", save_top_k=1, save_last=True,
+        # save_weights_only: jamais de resume d'entrainement dans ce code, seulement
+        # load_from_checkpoint (poids) -> inutile de payer l'etat optimizer Adam
+        # (~3x la taille du modele, cause du remplissage disque observe en pratique
+        # sur config_D_reverse: 80GB de volume presque satures).
+        save_weights_only=True,
     )
     trainer = L.Trainer(
         max_epochs=cfg_obj.NUM_EPOCHS, accelerator="auto", devices="auto",
