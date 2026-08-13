@@ -46,7 +46,7 @@ class NLLBFullFineTuner(L.LightningModule):
         outputs = self(
             batch["input_ids"], batch["attention_mask"], batch["labels"]
         )
-        self.log("val_loss", outputs.loss, prog_bar=True)
+        self.log("val_loss", outputs.loss, prog_bar=True, sync_dist=True)
 
         tgt_lang_id = self.tokenizer.convert_tokens_to_ids(self.cfg.TGT_LANG)
         generated = self.model.generate(
@@ -80,10 +80,15 @@ class NLLBFullFineTuner(L.LightningModule):
             model_type=self.cfg.BERTSCORE_MODEL,
             lang=self.cfg.BERTSCORE_LANG,
         )
-        self.log("val_bleu",         bleu["score"],       prog_bar=True)
-        self.log("val_rouge1",        rouge["rouge1"])
-        self.log("val_rougeL",        rouge["rougeL"])
-        self.log("val_bertscore_f1",  np.mean(bert["f1"]))
+        # sync_dist=True: en DDP (2 GPU), chaque rank ne voit qu'une moitié du val
+        # set, donc calcule un BLEU local différent. Sans synchronisation, les
+        # ranks peuvent choisir des "meilleurs" checkpoints différents et écrire
+        # des noms de fichiers incohérents (observé en pratique: crash D_reverse,
+        # best_checkpoint() cherchant un fichier jamais réellement écrit).
+        self.log("val_bleu",         bleu["score"],       prog_bar=True, sync_dist=True)
+        self.log("val_rouge1",        rouge["rouge1"],     sync_dist=True)
+        self.log("val_rougeL",        rouge["rougeL"],     sync_dist=True)
+        self.log("val_bertscore_f1",  np.mean(bert["f1"]), sync_dist=True)
         self.validation_step_outputs.clear()
 
     def configure_optimizers(self):

@@ -114,7 +114,7 @@ class OpusMTFineTuner(L.LightningModule):
         loss = self(**batch).loss; self.log("train_loss", loss, prog_bar=True); return loss
 
     def validation_step(self, batch, batch_idx):
-        output = self(**batch); self.log("val_loss", output.loss, prog_bar=True)
+        output = self(**batch); self.log("val_loss", output.loss, prog_bar=True, sync_dist=True)
         generated = self.model.generate(input_ids=batch["input_ids"], attention_mask=batch["attention_mask"],
                                         max_new_tokens=self.cfg.MAX_LENGTH, num_beams=self.cfg.NUM_BEAMS_VAL)
         self.validation_step_outputs.append({
@@ -131,7 +131,11 @@ class OpusMTFineTuner(L.LightningModule):
         rouge = self.metric_rouge.compute(predictions=preds, references=refs)["rougeL"]
         bert = np.mean(self.metric_bertscore.compute(predictions=preds, references=refs,
                             model_type=self.cfg.BERTSCORE_MODEL, lang=self.cfg.BERTSCORE_LANG)["f1"])
-        self.log_dict({"val_bleu": bleu, "val_rougeL": rouge, "val_bertscore_f1": bert}, prog_bar=True)
+        # sync_dist=True: en DDP, chaque rank ne voit qu'une moitié du val set ->
+        # BLEU local différent par rank sans synchronisation, risque de noms de
+        # checkpoint incohérents entre ranks (voir models/model_lora.py).
+        self.log_dict({"val_bleu": bleu, "val_rougeL": rouge, "val_bertscore_f1": bert},
+                      prog_bar=True, sync_dist=True)
         self.validation_step_outputs.clear()
 
     def configure_optimizers(self):

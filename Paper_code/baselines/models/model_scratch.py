@@ -233,7 +233,7 @@ class ScratchTransformer(L.LightningModule):
     def validation_step(self, batch, batch_idx):
         logits = self(batch["input_ids"], batch["decoder_input"], batch["attention_mask"])
         loss   = self.criterion(logits.reshape(-1, self.tokenizer.vocab_size), batch["labels"].reshape(-1))
-        self.log("val_loss", loss, prog_bar=True)
+        self.log("val_loss", loss, prog_bar=True, sync_dist=True)
 
         generated = self.model.generate(
             batch["input_ids"], batch["attention_mask"], max_new_tokens=self.cfg.MAX_LENGTH
@@ -256,10 +256,12 @@ class ScratchTransformer(L.LightningModule):
             predictions=all_preds, references=all_targets,
             model_type=self.cfg.BERTSCORE_MODEL, lang=self.cfg.BERTSCORE_LANG,
         )
-        self.log("val_bleu",         bleu["score"],        prog_bar=True)
-        self.log("val_rouge1",       rouge["rouge1"])
-        self.log("val_rougeL",       rouge["rougeL"])
-        self.log("val_bertscore_f1", np.mean(bert["f1"]))
+        # sync_dist=True: voir models/model_lora.py pour l'explication (course
+        # DDP sur val_bleu -> checkpoints incohérents entre ranks).
+        self.log("val_bleu",         bleu["score"],        prog_bar=True, sync_dist=True)
+        self.log("val_rouge1",       rouge["rouge1"],       sync_dist=True)
+        self.log("val_rougeL",       rouge["rougeL"],       sync_dist=True)
+        self.log("val_bertscore_f1", np.mean(bert["f1"]),   sync_dist=True)
         self.validation_step_outputs.clear()
 
     def configure_optimizers(self):
