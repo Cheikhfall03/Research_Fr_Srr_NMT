@@ -21,6 +21,10 @@
 #                                                   # (nécessaire si le pod contient déjà
 #                                                   # des checkpoints C/D entraînés avec
 #                                                   # l'ancien warmup=0, corrigé depuis)
+#   bash run_full_pipeline.sh --resume-from D      # reprise après un crash: saute
+#                                                   # l'entraînement des configs déjà
+#                                                   # terminées avec succès (ordre B->F),
+#                                                   # réutilise leurs checkpoints existants
 #
 # Prérequis: corpus/Corpus_Français_Serere_Aligné.txt et
 # corpus/serere_monolingual.txt déjà présents dans le repo cloné sur le pod
@@ -33,6 +37,7 @@ SKIP_SETUP=false
 SEEDS="43 44"  # seeds additionnels seulement; 42 vient des étapes 06-07-11
 GPUS=""
 CLEAN_CHECKPOINTS=false
+RESUME_FROM=""  # vide = tout exécuter depuis le début
 LOG_DIR="results/pipeline_logs"
 mkdir -p "$LOG_DIR"
 
@@ -42,9 +47,33 @@ while [[ $# -gt 0 ]]; do
     --seeds) SEEDS="$2"; shift 2 ;;
     --gpus) GPUS="$2"; shift 2 ;;
     --clean-checkpoints) CLEAN_CHECKPOINTS=true; shift ;;
+    --resume-from) RESUME_FROM="$2"; shift 2 ;;
     *) echo "Argument inconnu: $1"; exit 1 ;;
   esac
 done
+
+TRAIN_ORDER="B C D E F"
+should_skip_train() {
+  local target="$1"
+  [[ -z "$RESUME_FROM" ]] && return 1
+  local reached=false
+  for step in $TRAIN_ORDER; do
+    [[ "$step" == "$RESUME_FROM" ]] && reached=true
+    if [[ "$step" == "$target" ]]; then
+      if [[ "$reached" == true ]]; then return 1; else return 0; fi
+    fi
+  done
+  return 1
+}
+run_or_skip_train() {
+  local letter="$1"; shift
+  if should_skip_train "$letter"; then
+    echo ""
+    echo "=== [Reprise] Config ${letter} sautée (--resume-from ${RESUME_FROM}) — checkpoint existant réutilisé ==="
+  else
+    run_step "$@"
+  fi
+}
 
 STEP=0
 run_step() {
@@ -121,11 +150,11 @@ run_step "03b_test_urgent_configs" python tests/test_urgent_configs.py
 run_step "04_tokenizer" python baselines/build_tokenizer.py
 
 # --- 2. Entraînement seed 42 (référence, comme dans le papier) ------------
-run_step "05_train_B_full" python training/train_B_full.py
-run_step "06_train_C_lora" python training/train_C_lora.py
-run_step "07_train_D_backtranslation" python training/train_D_backtranslation.py
-run_step "08_train_E_opusmt" python baselines/train_baseline_opusmt.py
-run_step "09_train_F_scratch" python baselines/train_baseline_scratch.py
+run_or_skip_train B "05_train_B_full" python training/train_B_full.py
+run_or_skip_train C "06_train_C_lora" python training/train_C_lora.py
+run_or_skip_train D "07_train_D_backtranslation" python training/train_D_backtranslation.py
+run_or_skip_train E "08_train_E_opusmt" python baselines/train_baseline_opusmt.py
+run_or_skip_train F "09_train_F_scratch" python baselines/train_baseline_scratch.py
 
 # --- 3. Évaluation seed 42 (référence) -------------------------------------
 # Doit précéder le multi-seed: run_multiseed.py relit results/evaluation_test.json
