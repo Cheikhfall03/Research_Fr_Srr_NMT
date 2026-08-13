@@ -53,6 +53,13 @@ MODEL_REGISTRY = {
         "direction": "French → Serer",
         "publish_model": True,
     },
+    "G": {
+        "slug": "french-serer-nllb-lora-srr-token",
+        "display_name": "French–Serer NLLB LoRA with Native srr_Latn Token",
+        "kind": "final_translation_model",
+        "direction": "French → Serer",
+        "publish_model": True,
+    },
 }
 
 

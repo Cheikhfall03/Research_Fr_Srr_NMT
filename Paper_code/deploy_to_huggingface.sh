@@ -39,7 +39,7 @@ fi
 echo "=== [deploy_to_huggingface] Organisation cible: ${HF_ORG} (${PUBLIC_FLAG:-privé}) ==="
 
 STATUS=0
-for experiment in B C D E F; do
+for experiment in B C D E F G; do
   echo ""
   echo "--- Export + push ${experiment} ---"
   if python3 export_huggingface.py --experiment "${experiment}" --push --organization "${HF_ORG}" ${PUBLIC_FLAG}; then

@@ -40,6 +40,15 @@ def load(experiment):
         checkpoint = best_checkpoint(cfg.CHECKPOINT_DIR)
         module = NLLBFineTuner.load_from_checkpoint(checkpoint, cfg=cfg)
         return cfg, checkpoint, module.model.merge_and_unload(), module.tokenizer
+    if experiment == "G":
+        # Expérience hors protocole du papier: LoRA avec un vrai token srr_Latn
+        # (au lieu du proxy wol_Latn) — voir experiments/srr_token_G/.
+        from models.model_lora import NLLBFineTuner
+        from experiments.srr_token_G.train_G_srr_token import SrrTokenConfig
+        cfg = SrrTokenConfig()
+        checkpoint = best_checkpoint(cfg.CHECKPOINTS_G)
+        module = NLLBFineTuner.load_from_checkpoint(checkpoint, cfg=cfg)
+        return cfg, checkpoint, module.model.merge_and_unload(), module.tokenizer
     if experiment == "E":
         from baselines.models.model_opusmt import OpusMTFineTuner
         cfg = OpusMTConfig()
@@ -104,6 +113,9 @@ def export_artifact(experiment: str, output: Path):
         "target_language": "French" if experiment == "D_REVERSE" else ("Wolof probe" if experiment == "A" else "Serer"),
         "nllb_serer_proxy_token": "wol_Latn" if experiment in ("A", "B", "C", "D", "D_REVERSE") else None,
         "uses_proxy_for_serer_side": experiment in ("A", "B", "C", "D", "D_REVERSE"),
+        # G utilise un vrai token srr_Latn (initialisé depuis wol_Latn puis fine-tuné),
+        # pas le proxy wol_Latn brut employé par A-D -- distinction explicite ici.
+        "native_serer_token": "srr_Latn" if experiment == "G" else None,
     }
     (output / "experiment_metadata.json").write_text(
         json.dumps(complete_metadata, ensure_ascii=False, indent=2), encoding="utf-8"
@@ -116,7 +128,7 @@ def export_artifact(experiment: str, output: Path):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--experiment", choices=["A", "B", "C", "D", "D_REVERSE", "E", "F"], required=True)
+    parser.add_argument("--experiment", choices=["A", "B", "C", "D", "D_REVERSE", "E", "F", "G"], required=True)
     parser.add_argument("--output", help="Dossier local; défaut: hf_export/<nom-canonique>")
     parser.add_argument("--push", action="store_true")
     parser.add_argument("--organization", help="Compte/organisation HF; génère automatiquement le repo-id canonique")
