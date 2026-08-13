@@ -70,7 +70,10 @@ if [[ -s results/best_checkpoints_manifest.txt ]]; then
   while IFS=$'\t' read -r label path; do
     [[ -z "${label:-}" ]] && continue
     echo "  upload ${label}: $(basename "$path")"
-    rclone copy "$path" "${DRIVE_REMOTE}/checkpoints/${label}/"
+    # </dev/null: sans ça, rclone hérite du même stdin que la boucle (le
+    # manifeste) et peut y lire/consommer des octets, avalant les lignes
+    # suivantes -> seul le premier checkpoint se faisait uploader en pratique.
+    rclone copy "$path" "${DRIVE_REMOTE}/checkpoints/${label}/" < /dev/null
   done < results/best_checkpoints_manifest.txt
 else
   echo "[deploy_to_drive] Aucun checkpoint trouvé — rien à uploader (entraînement pas encore terminé ?)."
