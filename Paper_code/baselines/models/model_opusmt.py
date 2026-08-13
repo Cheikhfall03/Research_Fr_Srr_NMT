@@ -97,6 +97,12 @@ class OpusMTFineTuner(L.LightningModule):
         nn.init.normal_(self.model.lm_head.weight, mean=0.0, std=hidden ** -0.5)
         self.model.final_logits_bias = torch.zeros((1, vocab))
         self.model.config.vocab_size = vocab
+        # MarianConfig a un decoder_vocab_size DISTINCT de vocab_size, utilisé par
+        # MarianMTModel.forward() pour reshaper les logits avant la loss. Sans
+        # cette ligne il reste à la valeur pré-entraînée (59514, vocabulaire
+        # opus-mt-fr-en d'origine) au lieu du vocabulaire sérère réinitialisé
+        # -> RuntimeError au premier appel de validation_step (logits.view()).
+        self.model.config.decoder_vocab_size = vocab
         self.model.config.share_encoder_decoder_embeddings = False
         self.model.config.tie_word_embeddings = False
         self.model.config.decoder_start_token_id = BOS_ID
