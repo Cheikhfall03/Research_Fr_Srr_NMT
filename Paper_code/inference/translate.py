@@ -1,9 +1,10 @@
-"""Interface d'inférence unique pour tous les artefacts A–F et D_REVERSE.
+"""Interface d'inférence unique pour tous les artefacts A–G et D_REVERSE.
 
 Exemples:
   python inference/translate.py --experiment C --text "Bonjour"
   python inference/translate.py --experiment D_REVERSE --text "Phrase sérère"
   python inference/translate.py --experiment E --input phrases.txt --output predictions.jsonl
+  python inference/translate.py --experiment G --text "Bonjour" (token natif srr_Latn)
 """
 from __future__ import annotations
 
@@ -67,6 +68,14 @@ def load_artifact(experiment: str):
         module = OpusMTFineTuner.load_from_checkpoint(checkpoint, cfg=cfg)
         return cfg, module.model, module.source_tokenizer, module.target_tokenizer, checkpoint
 
+    if experiment == "G":
+        from experiments.srr_token_G.train_G_srr_token import SrrTokenConfig
+        from models.model_lora import NLLBFineTuner
+        cfg = SrrTokenConfig()
+        checkpoint = best_checkpoint(cfg.CHECKPOINTS_G)
+        module = NLLBFineTuner.load_from_checkpoint(checkpoint, cfg=cfg)
+        return cfg, module.model, module.tokenizer, module.tokenizer, checkpoint
+
     from baselines.models.model_scratch import ScratchTransformer
     cfg = ScratchConfig()
     checkpoint = best_checkpoint(Path(cfg.CHECKPOINTS_DIR) / "baseline_scratch")
@@ -90,7 +99,7 @@ def translate_batch(experiment, cfg, model, source_tokenizer, target_tokenizer, 
         max_length=cfg.MAX_LENGTH,
     ).to(DEVICE)
     kwargs = {"max_new_tokens": cfg.MAX_LENGTH, "num_beams": cfg.NUM_BEAMS_TEST}
-    if experiment in ("A", "B", "C", "D", "D_REVERSE"):
+    if experiment in ("A", "B", "C", "D", "D_REVERSE", "G"):
         kwargs["forced_bos_token_id"] = source_tokenizer.convert_tokens_to_ids(cfg.TGT_LANG)
     generated = model.generate(**inputs, **kwargs)
     if experiment == "E":
@@ -110,7 +119,7 @@ def read_inputs(text: str | None, input_path: str | None) -> list[str]:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--experiment", choices=["A", "B", "C", "D", "D_REVERSE", "E", "F"], required=True)
+    parser.add_argument("--experiment", choices=["A", "B", "C", "D", "D_REVERSE", "E", "F", "G"], required=True)
     source = parser.add_mutually_exclusive_group(required=True)
     source.add_argument("--text", help="Une phrase source")
     source.add_argument("--input", help="Fichier UTF-8, une phrase par ligne")
