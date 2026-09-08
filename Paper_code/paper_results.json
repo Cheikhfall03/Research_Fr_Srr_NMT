@@ -1,9 +1,18 @@
 {
-  "status": "reported_in_manuscript_not_reproduced_by_this_checkout",
-  "warning": "Do not present these numbers as reproduced until checkpoints, predictions and manifests are available.",
+  "status": "reproduced_on_verification_infrastructure_during_revision",
+  "warning": "Values below are reproduced results (retrained checkpoints, cloud RTX 4090 infrastructure, Aug 2026), superseding the submitted-manuscript numbers under 'submitted_manuscript_original'. Configuration A's submitted value (17.98) was a factor-of-100 transcription error; see the revision response letter and manuscript Section V for full discussion. Expert linguistic_score values are unchanged from the submitted manuscript (5-10 sample not re-annotated on reproduced checkpoints); Configuration G has not yet been expert-scored.",
   "results": {
+    "F": {"bleu": 12.04, "chrf": null, "rouge1": 0.3487, "rougeL": 0.2985, "bertscore_f1": 0.863, "loss": 2.74, "linguistic_score": "0.5/5"},
+    "A": {"bleu": 0.24, "chrf": 14.33, "rouge1": 0.0299, "rougeL": 0.028, "bertscore_f1": 0.797, "loss": 7.56, "linguistic_score": "1/5"},
+    "E": {"bleu": 17.74, "chrf": null, "rouge1": 0.4086, "rougeL": 0.359, "bertscore_f1": 0.875, "loss": 3.38, "linguistic_score": "3/5"},
+    "C": {"bleu": 17.93, "chrf": 38.72, "rouge1": 0.4343, "rougeL": 0.391, "bertscore_f1": 0.876, "loss": 1.98, "linguistic_score": "1/5"},
+    "D": {"bleu": 16.88, "chrf": 38.90, "rouge1": 0.4305, "rougeL": 0.389, "bertscore_f1": 0.875, "loss": 1.94, "linguistic_score": "2/5"},
+    "B": {"bleu": 21.11, "chrf": 41.36, "rouge1": 0.4569, "rougeL": 0.413, "bertscore_f1": 0.882, "loss": 1.83, "linguistic_score": "2/5"},
+    "G": {"bleu": 19.59, "chrf": 41.28, "rouge1": 0.4546, "rougeL": 0.411, "bertscore_f1": 0.882, "loss": 1.86, "linguistic_score": null}
+  },
+  "submitted_manuscript_original": {
     "F": {"bleu": 7.28, "bertscore_f1": 0.846, "rougeL": 0.259, "loss": 2.59, "linguistic_score": "0.5/5"},
-    "A": {"bleu": 17.98, "bertscore_f1": 0.797, "rougeL": 0.029, "loss": 7.54, "linguistic_score": "1/5"},
+    "A": {"bleu": 17.98, "bertscore_f1": 0.797, "rougeL": 0.029, "loss": 7.54, "linguistic_score": "1/5", "note": "transcription error; correct submitted-run value was 0.1798"},
     "E": {"bleu": 21.88, "bertscore_f1": 0.885, "rougeL": 0.420, "loss": 1.63, "linguistic_score": "3/5"},
     "C": {"bleu": 24.08, "bertscore_f1": 0.889, "rougeL": 0.441, "loss": 1.75, "linguistic_score": "1/5"},
     "D": {"bleu": 24.70, "bertscore_f1": 0.890, "rougeL": 0.450, "loss": 1.72, "linguistic_score": "2/5"},

@@ -1,16 +1,24 @@
 # French–Serer neural machine translation
 
 Code accompanying *Neural Machine Translation from French to the Low-Resource
-Serer Language*. The repository benchmarks six systems and treats the unadapted
+Serer Language*. The repository benchmarks seven systems and treats the unadapted
 NLLB Wolof output as a **proximity probe**, not as a Serer translator.
 
 ## Scientific status
 
-The source code now follows the protocol stated in the manuscript. This checkout
-does **not** contain trained weights, the independent ~8,500-sentence monolingual
-Serer corpus, or completed expert annotations. Consequently, the values in
-`paper_results.json` are manuscript-reported values, not results reproduced from
-this checkout. Do not remove that distinction when publishing.
+The source code follows the protocol stated in the manuscript. `paper_results.json`
+now reports two sets of numbers: `results`, the values reproduced on the
+verification infrastructure built during revision (retrained checkpoints, cloud
+RTX 4090 GPUs, August 2026), which are the ones used in the revised manuscript;
+and `submitted_manuscript_original`, the values from the originally submitted
+manuscript, kept for traceability, including the corrected transcription error
+on Configuration A (submitted as 17.98, actually 0.1798/0.24). This local
+checkout does **not** contain the trained weights, the independent
+~8,500-sentence monolingual Serer corpus, or the expanded (30-sample) expert
+annotation package, which remains unscored; see the revision response letter and
+`revision/manuscript/manuscript.tex` Section VI-B for the full list of open
+limitations. Do not remove the distinction between reproduced and originally
+submitted values when publishing.
 
 | ID | System | Paper protocol |
 |---|---|---|
@@ -20,6 +28,7 @@ this checkout. Do not remove that distinction when publishing.
 | D | C + back-translation | full-FT inverse model, independent SRR mono, 30% synthetic |
 | E | OPUS-MT full FT | pretrained French encoder, reinitialized 8k Serer decoder vocabulary, 15 epochs |
 | F | Transformer from scratch | 3+3 layers, d=128, FF=256, 4 heads, dropout .3, 30 epochs |
+| G | NLLB + LoRA, native `srr_Latn` token | as C, with a dedicated `srr_Latn` target token instead of the `wol_Latn` proxy |
 
 The exact machine-readable settings are in `config.py`. NLLB has no Serer tag;
 `wol_Latn` is used as a proxy. Automatic scores, especially BLEU and BERTScore,
