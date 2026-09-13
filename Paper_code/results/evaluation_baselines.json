@@ -1,0 +1,16 @@
+{
+  "scratch": {
+    "bleu": 12.0405,
+    "rouge1": 0.3487,
+    "rougeL": 0.2985,
+    "bertscore_f1": 0.863,
+    "loss": 2.7447
+  },
+  "opusmt": {
+    "bleu": 17.7427,
+    "rouge1": 0.4086,
+    "rougeL": 0.359,
+    "bertscore_f1": 0.8748,
+    "loss": 3.379
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "A": {
+    "bleu": 0.241,
+    "chrf": 14.3346,
+    "rouge1": 0.0299,
+    "rougeL": 0.0283,
+    "bertscore_f1": 0.797,
+    "loss": 7.5564,
+    "checkpoint": null,
+    "test_sha256": "01d14d982a3c0cce172b5099e2db064d05bdef89677fe72a45f56715d6364ee2",
+    "seed": 42
+  },
+  "B": {
+    "bleu": 21.1135,
+    "chrf": 41.3587,
+    "rouge1": 0.4569,
+    "rougeL": 0.4133,
+    "bertscore_f1": 0.8819,
+    "loss": 1.8273,
+    "checkpoint": "/workspace/Research_Fr_Srr_NMT/Paper_code/checkpoints/config_B/french_serer_nllb_full_ft-epoch=08-val_bleu=22.4582.ckpt",
+    "test_sha256": "01d14d982a3c0cce172b5099e2db064d05bdef89677fe72a45f56715d6364ee2",
+    "seed": 42
+  },
+  "C": {
+    "bleu": 17.9291,
+    "chrf": 38.7191,
+    "rouge1": 0.4343,
+    "rougeL": 0.391,
+    "bertscore_f1": 0.8764,
+    "loss": 1.9768,
+    "checkpoint": "/workspace/Research_Fr_Srr_NMT/Paper_code/checkpoints/config_C/french_serer_nllb_lora-epoch=09-val_bleu=19.1677.ckpt",
+    "test_sha256": "01d14d982a3c0cce172b5099e2db064d05bdef89677fe72a45f56715d6364ee2",
+    "seed": 42
+  },
+  "D": {
+    "bleu": 16.8802,
+    "chrf": 38.902,
+    "rouge1": 0.4305,
+    "rougeL": 0.3894,
+    "bertscore_f1": 0.8747,
+    "loss": 1.9376,
+    "checkpoint": "/workspace/Research_Fr_Srr_NMT/Paper_code/checkpoints/config_D/french_serer_nllb_lora_backtranslation-epoch=09-val_bleu=18.8598.ckpt",
+    "test_sha256": "01d14d982a3c0cce172b5099e2db064d05bdef89677fe72a45f56715d6364ee2",
+    "seed": 42
+  }
+}

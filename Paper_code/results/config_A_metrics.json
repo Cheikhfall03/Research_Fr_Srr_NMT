@@ -1,0 +1,17 @@
+{
+  "config": "A_frozen",
+  "val": {
+    "bleu": 0.2853,
+    "rouge1": 0.0323,
+    "rougeL": 0.0305,
+    "bertscore_f1": 0.7973,
+    "n_examples": 2889
+  },
+  "test": {
+    "bleu": 0.241,
+    "rouge1": 0.0298,
+    "rougeL": 0.0283,
+    "bertscore_f1": 0.797,
+    "n_examples": 2890
+  }
+}

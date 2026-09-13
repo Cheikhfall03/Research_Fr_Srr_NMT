@@ -1,0 +1,9 @@
+B	checkpoints/config_B/french_serer_nllb_full_ft-epoch=08-val_bleu=22.4582.ckpt
+C	checkpoints/config_C/french_serer_nllb_lora-epoch=09-val_bleu=19.1677.ckpt
+D	checkpoints/config_D/french_serer_nllb_lora_backtranslation-epoch=09-val_bleu=18.8598.ckpt
+E	checkpoints/baseline_opusmt/french_serer_opusmt_full_ft-epoch=09-val_bleu=15.6038.ckpt
+F	checkpoints/baseline_scratch/french_serer_transformer_scratch-epoch=23-val_bleu=11.9665.ckpt
+config_C_seed44	checkpoints/config_C_seed44/french_serer_nllb_lora-epoch=09-val_bleu=20.9209.ckpt
+config_C_seed43	checkpoints/config_C_seed43/french_serer_nllb_lora-epoch=09-val_bleu=21.6092.ckpt
+config_D_seed43	checkpoints/config_D_seed43/french_serer_nllb_lora_backtranslation-epoch=09-val_bleu=22.0061.ckpt
+config_D_seed44	checkpoints/config_D_seed44/french_serer_nllb_lora_backtranslation-epoch=09-val_bleu=20.7407.ckpt
