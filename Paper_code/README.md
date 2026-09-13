@@ -152,10 +152,16 @@ religious texts, and remove personal or sensitive information.
   work, see the manuscript's revision response).
 - [x] Run multiple seeds and report mean ± standard deviation for stronger claims
   (`results/multiseed_summary.csv`, configurations C and D).
-- [ ] Confirm corpus and code licenses before public release.
+- [x] Code license confirmed (MIT, repository-root `LICENSE`).
+- [ ] Corpus license/rights unresolved: raw text sourced from material found online, no
+  documented redistribution permission from the rights holder(s). Removed from the public
+  repository pending verification (see `DATASET_CARD.md`); available on individual request.
 
 ## Citation and license
 
-Add the final BibTeX entry after acceptance. No license is asserted here yet because the
-corpus rights and intended code license have not been finalized. The repository is public for
-editorial verification during review; treat it as provisional until licensing is settled.
+Add the final BibTeX entry after acceptance. The code is MIT-licensed (see `LICENSE` at the
+repository root). The corpus is a separate matter: its raw text has been removed from this
+repository (2026-09-14) because its provenance and redistribution rights are unresolved --
+see `DATASET_CARD.md`. Only derived artifacts (split sizes, SHA-256 fingerprints, statistics,
+and the fine-tuned checkpoints) remain public; the raw corpus text is available on request
+pending rights verification.

@@ -28,9 +28,26 @@ final corpus, so the default preserves the manuscript's 28,892 pairs. The option
 - sentence-random split because document identifiers are unavailable;
 - possible near-duplicate biblical passages require an additional audit.
 
+## Provenance and rights (unresolved)
+
+The biblical subset (~90%) and the educational glossaries (~10%) were both
+collected from material found online (a digital Bible text and glossary
+sources); no documented permission to redistribute has been obtained from
+the original rights holder(s) (likely the organization or individual(s)
+responsible for the Serer Bible translation). This is an unresolved
+copyright question, not a formality: the raw corpus text has been removed
+from the public code repository (2026-09-14) pending verification. Only
+derived artifacts that do not reproduce the source text -- split sizes and
+SHA-256 fingerprints (`data/dataset_manifest.json`), aggregate statistics,
+and the fine-tuned model checkpoints -- remain public.
+
 ## Release requirements
 
-Before publication, document the source of every subset, copyright/license,
-speaker consent where applicable, removal policy and contact information. Until
-then, publish the dataset repository as private or gated and do not declare an
-open license.
+Before publishing the raw corpus text or declaring an open license for it:
+document the exact source of every subset, identify and contact the
+copyright holder(s), obtain redistribution permission or use one already
+granted for the source, note speaker/translator consent where applicable,
+and establish a removal policy and contact information. Until this is
+done, the raw corpus text is available only on individual request, and no
+open license is declared for it. The accompanying code remains MIT-licensed
+regardless (see repository root `LICENSE`).
