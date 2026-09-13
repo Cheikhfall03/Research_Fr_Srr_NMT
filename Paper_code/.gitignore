@@ -18,3 +18,9 @@ hf_export/
 # Reconstruit automatiquement par build_kallaama_monolingual.py (voir run_full_pipeline.sh)
 corpus/serere_monolingual.txt
 corpus/serere_monolingual.manifest.json
+
+# Provenance/droits non établis (source: téléchargée en ligne, détenteur des
+# droits sur cette traduction biblique en Serer non identifié) -- ne pas
+# republier tant que ce n'est pas vérifié. Voir DATASET_CARD.md.
+corpus/Corpus_Français_Serere_Aligné.txt
+corpus/Analyse_linguistique_FR-SRR.docx
