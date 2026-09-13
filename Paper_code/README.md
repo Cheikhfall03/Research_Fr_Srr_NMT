@@ -133,17 +133,23 @@ religious texts, and remove personal or sensitive information.
 
 ## Reproducibility checklist
 
-- [ ] Pin `MODEL_REVISION` to a Hugging Face commit hash.
-- [ ] Archive the exact train/validation/test manifests.
-- [ ] Add the independent monolingual Serer corpus or a documented retrieval script.
-- [ ] Train every configuration with seed 42 on the documented hardware.
-- [ ] Retain checkpoints, logs, predictions and manifests.
-- [ ] Complete blinded expert annotation and release the anonymized records.
-- [ ] Run multiple seeds and report mean ± standard deviation for stronger claims.
+- [ ] Pin `MODEL_REVISION` to a Hugging Face commit hash (manifests currently record `"main"`).
+- [ ] Archive the exact train/validation/test manifests (SHA-256 fingerprints are computed by
+  `prepare_data.py` at run time but not yet committed as standalone files).
+- [x] Add the independent monolingual Serer corpus or a documented retrieval script
+  (`build_kallaama_monolingual.py`, CC BY 4.0 Kallaama provenance).
+- [x] Train every configuration with seed 42 on the documented hardware.
+- [x] Retain checkpoints, logs, predictions and manifests (checkpoints on the Hugging Face
+  Hub; per-run manifests, predictions and bootstrap/multi-seed outputs in `results/`).
+- [ ] Complete blinded expert annotation and release the anonymized records (single-annotator,
+  5-10 outputs/config; a second-annotator package was prepared but not scored — left as future
+  work, see the manuscript's revision response).
+- [x] Run multiple seeds and report mean ± standard deviation for stronger claims
+  (`results/multiseed_summary.csv`, configurations C and D).
 - [ ] Confirm corpus and code licenses before public release.
 
 ## Citation and license
 
-Add the final BibTeX entry after acceptance. No license is asserted here because
-the corpus rights and intended code license have not yet been documented; GitHub
-and Hugging Face publication should remain private until this is resolved.
+Add the final BibTeX entry after acceptance. No license is asserted here yet because the
+corpus rights and intended code license have not been finalized. The repository is public for
+editorial verification during review; treat it as provisional until licensing is settled.
