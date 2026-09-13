@@ -1,0 +1,26 @@
+{
+  "seed": 42,
+  "ratios": {
+    "train": 0.8,
+    "val": 0.1,
+    "test": 0.1
+  },
+  "counts": {
+    "train": 23113,
+    "val": 2889,
+    "test": 2890
+  },
+  "source_sha256": "d0e6e2a6e43e42bea6b2bb72992b6ce306115f33bd91f03f85c8744428e5cb71",
+  "cleaning_audit": {
+    "raw": 28892,
+    "length_ratio_rejected": 1474,
+    "exact_duplicates": 329,
+    "retained": 27089
+  },
+  "splits_sha256": {
+    "train": "796c2a878fd3b34396784f4eea3f7537ef7a3d02a2aba6461b0b004cbb6ea0b7",
+    "val": "66bf1f8caf061d1c3e36847e4ba4b4e670761a632835f0f0db3f6a27b11eda3a",
+    "test": "01d14d982a3c0cce172b5099e2db064d05bdef89677fe72a45f56715d6364ee2"
+  },
+  "warning": "Random sentence split; a document-level split is preferable if document IDs become available."
+}

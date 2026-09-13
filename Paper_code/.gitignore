@@ -7,6 +7,7 @@ outputs/
 results/*/version_*/
 data/*.json
 !data/udhr_fr_srr_probe_test.json
+!data/dataset_manifest.json
 data/*.jsonl
 baselines/tokenizer/corpus_combined.txt
 *.ckpt
