@@ -125,7 +125,7 @@ def load_monolingual() -> list[str]:
     if not path.exists():
         raise FileNotFoundError(
             f"Corpus monolingue absent: {path}\n"
-            "Ajoutez les ~8 500 phrases sérères indépendantes décrites dans le papier. "
+            "Générez-le via build_kallaama_monolingual.py (12 737 phrases attendues). "
             "Le code refuse d'utiliser les cibles de train.json comme substitut."
         )
     raw_lines = [line.strip() for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
