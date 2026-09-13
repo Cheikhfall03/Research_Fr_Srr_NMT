@@ -133,9 +133,10 @@ religious texts, and remove personal or sensitive information.
 
 ## Reproducibility checklist
 
-- [ ] Pin `MODEL_REVISION` to a Hugging Face commit hash (manifests currently record `"main"`).
-- [ ] Archive the exact train/validation/test manifests (SHA-256 fingerprints are computed by
-  `prepare_data.py` at run time but not yet committed as standalone files).
+- [x] Pin `MODEL_REVISION` to a Hugging Face commit hash (`config.py`, pinned 2026-09-13).
+- [x] Archive the exact train/validation/test manifests (`data/dataset_manifest.json`: split
+  sizes and source/split SHA-256 fingerprints; the split JSON files themselves are regenerated
+  deterministically via `prepare_data.py` rather than duplicating corpus text in the repo).
 - [x] Add the independent monolingual Serer corpus or a documented retrieval script
   (`build_kallaama_monolingual.py`, CC BY 4.0 Kallaama provenance).
 - [x] Train every configuration with seed 42 on the documented hardware.
