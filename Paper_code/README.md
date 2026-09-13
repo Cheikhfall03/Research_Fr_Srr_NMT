@@ -137,8 +137,13 @@ religious texts, and remove personal or sensitive information.
 - [x] Archive the exact train/validation/test manifests (`data/dataset_manifest.json`: split
   sizes and source/split SHA-256 fingerprints; the split JSON files themselves are regenerated
   deterministically via `prepare_data.py` rather than duplicating corpus text in the repo).
-- [x] Add the independent monolingual Serer corpus or a documented retrieval script
-  (`build_kallaama_monolingual.py`, CC BY 4.0 Kallaama provenance).
+- [ ] Add the independent monolingual Serer corpus or a documented retrieval script.
+  `build_kallaama_monolingual.py` exists, is pinned to a Kallaama commit, and runs end-to-end
+  from a public CC BY 4.0 source — but re-running it today yields 12,737 sentences, not the
+  ~8,500 actually used to train Configuration D (verified 2026-09-13; that exact monolingual
+  file was not preserved). The script does not currently reproduce D's original input; treat
+  D's back-translation results as based on an archived, no-longer-reproducible corpus snapshot
+  until this is resolved.
 - [x] Train every configuration with seed 42 on the documented hardware.
 - [x] Retain checkpoints, logs, predictions and manifests (checkpoints on the Hugging Face
   Hub; per-run manifests, predictions and bootstrap/multi-seed outputs in `results/`).
