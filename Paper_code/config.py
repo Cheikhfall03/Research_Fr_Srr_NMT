@@ -14,7 +14,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 class Config:
     EXPERIMENT_ID: str = "A"
     MODEL_NAME: str = "facebook/nllb-200-distilled-600M"
-    MODEL_REVISION: str = "main"  # à remplacer par un commit HF pour une archive finale
+    MODEL_REVISION: str = "f8d333a098d19b4fd9a8b18f94170487ad3f821d"  # HF commit hash, pinned 2026-09-13
     SRC_LANG: str = "fra_Latn"
     # Le sérère est absent de NLLB. wol_Latn sert de proxy de décodage.
     TGT_LANG: str = "wol_Latn"
@@ -140,6 +140,7 @@ class ReverseFullFTConfig(FullFTConfig):
 class OpusMTConfig(Config):
     EXPERIMENT_ID: str = "E"
     MODEL_NAME: str = "Helsinki-NLP/opus-mt-fr-en"
+    MODEL_REVISION: str = "c4aed37b318c763fd177aa449b44e3b783cc6c02"  # HF commit hash, pinned 2026-09-13
     LR: float = 2e-5
     NUM_EPOCHS: int = 15
     WARMUP_STEPS: int = 500
