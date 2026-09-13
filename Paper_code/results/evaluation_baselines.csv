@@ -1,0 +1,3 @@
+modele,bleu,rouge1,rougeL,bertscore_f1,loss
+Transformer scratch,12.0405,0.3487,0.2985,0.863,2.7447
+opus-mt-fr fine-tuné,17.7427,0.4086,0.359,0.8748,3.379

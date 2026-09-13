@@ -1,0 +1,55 @@
+{
+  "experiment": {
+    "EXPERIMENT_ID": "B",
+    "MODEL_NAME": "facebook/nllb-200-distilled-600M",
+    "MODEL_REVISION": "main",
+    "SRC_LANG": "fra_Latn",
+    "TGT_LANG": "wol_Latn",
+    "MAX_LENGTH": 128,
+    "BATCH_SIZE": 8,
+    "NUM_EPOCHS": 10,
+    "LR": 2e-05,
+    "WARMUP_STEPS": 500,
+    "WEIGHT_DECAY": 0.1,
+    "EARLY_STOPPING_PATIENCE": 2,
+    "NUM_BEAMS_VAL": 1,
+    "NUM_BEAMS_TEST": 5,
+    "GRAD_ACCUM_STEPS": 4,
+    "SEED": 42,
+    "TRAIN_RATIO": 0.8,
+    "VAL_RATIO": 0.1,
+    "TEST_RATIO": 0.1,
+    "NUM_WORKERS": 4,
+    "BERTSCORE_MODEL": "distilbert-base-multilingual-cased",
+    "BERTSCORE_LANG": "wo",
+    "CORPUS_PATH": "/workspace/Research_Fr_Srr_NMT/Paper_code/corpus/Corpus_Français_Serere_Aligné.txt",
+    "MONOLINGUAL_SR_PATH": "/workspace/Research_Fr_Srr_NMT/Paper_code/corpus/serere_monolingual.txt",
+    "DATA_DIR": "/workspace/Research_Fr_Srr_NMT/Paper_code/data",
+    "RESULTS_DIR": "/workspace/Research_Fr_Srr_NMT/Paper_code/results",
+    "OUTPUTS_DIR": "/workspace/Research_Fr_Srr_NMT/Paper_code/outputs",
+    "CHECKPOINTS_DIR": "/workspace/Research_Fr_Srr_NMT/Paper_code/checkpoints",
+    "LORA_R": 16,
+    "LORA_ALPHA": 32,
+    "LORA_DROPOUT": 0.1,
+    "LORA_TARGETS": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "out_proj"
+    ]
+  },
+  "environment": {
+    "created_at_utc": "2026-08-12T23:26:03.823690+00:00",
+    "git_commit": "b57bcc1a3f314c57f8e89374f83cdbc135ce9980",
+    "python": "3.11.10",
+    "pytorch": "2.6.0+cu124",
+    "cuda": "12.4",
+    "gpu": "NVIDIA GeForce RTX 4090",
+    "command": "training/train_B_full.py"
+  },
+  "files": {
+    "/workspace/Research_Fr_Srr_NMT/Paper_code/data/train.json": "796c2a878fd3b34396784f4eea3f7537ef7a3d02a2aba6461b0b004cbb6ea0b7",
+    "/workspace/Research_Fr_Srr_NMT/Paper_code/data/val.json": "66bf1f8caf061d1c3e36847e4ba4b4e670761a632835f0f0db3f6a27b11eda3a"
+  },
+  "best_checkpoint": "/workspace/Research_Fr_Srr_NMT/Paper_code/checkpoints/config_B/french_serer_nllb_full_ft-epoch=08-val_bleu=22.4582.ckpt"
+}

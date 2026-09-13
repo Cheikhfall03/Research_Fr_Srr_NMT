@@ -1,0 +1,5 @@
+config,bleu,chrf,rouge1,rougeL,bertscore_f1,loss,n_sentences,checkpoint
+A,0.0646,13.2017,0.0213,0.0179,0.7581,7.3949,50,
+B,0.5133,16.3472,0.1902,0.1644,0.7998,4.9538,50,/workspace/Research_Fr_Srr_NMT/Paper_code/checkpoints/config_B/french_serer_nllb_full_ft-epoch=08-val_bleu=22.4582.ckpt
+C,0.5869,18.6565,0.2094,0.1888,0.7997,4.9977,50,/workspace/Research_Fr_Srr_NMT/Paper_code/checkpoints/config_C/french_serer_nllb_lora-epoch=09-val_bleu=19.1677.ckpt
+D,0.4279,16.7133,0.1657,0.1504,0.7821,4.7647,50,/workspace/Research_Fr_Srr_NMT/Paper_code/checkpoints/config_D/french_serer_nllb_lora_backtranslation-epoch=09-val_bleu=18.8598.ckpt

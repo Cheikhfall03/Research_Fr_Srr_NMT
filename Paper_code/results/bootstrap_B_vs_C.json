@@ -1,0 +1,13 @@
+{
+  "bleu_a": 21.1135,
+  "bleu_b": 17.9291,
+  "observed_delta": 3.1843,
+  "delta_ci95_low": 2.5591,
+  "delta_ci95_high": 3.7953,
+  "p_value": 0.0,
+  "significant_at_0.05": true,
+  "n_resamples": 1000,
+  "n_sentences": 2890,
+  "system_a": "B",
+  "system_b": "C"
+}

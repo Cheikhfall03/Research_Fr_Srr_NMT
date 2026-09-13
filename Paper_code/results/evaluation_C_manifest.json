@@ -1,0 +1,64 @@
+{
+  "experiment": {
+    "EXPERIMENT_ID": "C",
+    "MODEL_NAME": "facebook/nllb-200-distilled-600M",
+    "MODEL_REVISION": "main",
+    "SRC_LANG": "fra_Latn",
+    "TGT_LANG": "wol_Latn",
+    "MAX_LENGTH": 128,
+    "BATCH_SIZE": 8,
+    "NUM_EPOCHS": 10,
+    "LR": 0.0003,
+    "WARMUP_STEPS": 500,
+    "WEIGHT_DECAY": 0.1,
+    "EARLY_STOPPING_PATIENCE": 2,
+    "NUM_BEAMS_VAL": 1,
+    "NUM_BEAMS_TEST": 5,
+    "GRAD_ACCUM_STEPS": 4,
+    "SEED": 42,
+    "TRAIN_RATIO": 0.8,
+    "VAL_RATIO": 0.1,
+    "TEST_RATIO": 0.1,
+    "NUM_WORKERS": 4,
+    "BERTSCORE_MODEL": "distilbert-base-multilingual-cased",
+    "BERTSCORE_LANG": "wo",
+    "CORPUS_PATH": "/workspace/Research_Fr_Srr_NMT/Paper_code/corpus/Corpus_Français_Serere_Aligné.txt",
+    "MONOLINGUAL_SR_PATH": "/workspace/Research_Fr_Srr_NMT/Paper_code/corpus/serere_monolingual.txt",
+    "DATA_DIR": "/workspace/Research_Fr_Srr_NMT/Paper_code/data",
+    "RESULTS_DIR": "/workspace/Research_Fr_Srr_NMT/Paper_code/results",
+    "OUTPUTS_DIR": "/workspace/Research_Fr_Srr_NMT/Paper_code/outputs",
+    "CHECKPOINTS_DIR": "/workspace/Research_Fr_Srr_NMT/Paper_code/checkpoints",
+    "LORA_R": 16,
+    "LORA_ALPHA": 32,
+    "LORA_DROPOUT": 0.1,
+    "LORA_TARGETS": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "out_proj"
+    ]
+  },
+  "environment": {
+    "created_at_utc": "2026-08-13T14:40:19.638907+00:00",
+    "git_commit": "c0e490a9203c4a80e74859306554e401f46d77ae",
+    "python": "3.11.10",
+    "pytorch": "2.6.0+cu124",
+    "cuda": "12.4",
+    "gpu": "NVIDIA GeForce RTX 4090",
+    "command": "evaluate_test.py --configs A B C D"
+  },
+  "files": {
+    "/workspace/Research_Fr_Srr_NMT/Paper_code/data/test.json": "01d14d982a3c0cce172b5099e2db064d05bdef89677fe72a45f56715d6364ee2"
+  },
+  "metrics": {
+    "bleu": 17.9291,
+    "chrf": 38.7191,
+    "rouge1": 0.4343,
+    "rougeL": 0.391,
+    "bertscore_f1": 0.8764,
+    "loss": 1.9768,
+    "checkpoint": "/workspace/Research_Fr_Srr_NMT/Paper_code/checkpoints/config_C/french_serer_nllb_lora-epoch=09-val_bleu=19.1677.ckpt",
+    "test_sha256": "01d14d982a3c0cce172b5099e2db064d05bdef89677fe72a45f56715d6364ee2",
+    "seed": 42
+  }
+}
