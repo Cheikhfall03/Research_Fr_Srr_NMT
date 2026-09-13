@@ -46,5 +46,26 @@
     "udhr_sha256": "84838c557c659e2a363e6fe1eade8439f11f89e9d2dcbec305b7ea797b858a99",
     "n_sentences": 50,
     "domain": "udhr_non_religious"
+  },
+  "E": {
+    "bleu": 1.0638,
+    "chrf": 20.9242,
+    "bertscore_f1": 0.8212,
+    "n_sentences": 50,
+    "domain": "udhr_non_religious"
+  },
+  "F": {
+    "bleu": 0.6584,
+    "chrf": 20.2528,
+    "bertscore_f1": 0.813,
+    "n_sentences": 50,
+    "domain": "udhr_non_religious"
+  },
+  "G": {
+    "bleu": 0.7319,
+    "chrf": 18.9314,
+    "bertscore_f1": 0.7992,
+    "n_sentences": 50,
+    "domain": "udhr_non_religious"
   }
 }
